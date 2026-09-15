@@ -1,6 +1,6 @@
-import './visual-v3.js';
-import {Game} from './game.js';
-import {RECIPES,CONFIG} from './config.js';
+import './visual-v3.js?v=v5.3';
+import {Game} from './game.js?v=v5.3';
+import {RECIPES,CONFIG} from './config.js?v=v5.3';
 const game=new Game(),$=id=>document.getElementById(id),stage=document.querySelector('.game-stage');
 
 document.querySelector('.steamer').id='steam';
@@ -142,6 +142,7 @@ function frame(time){game.tick();if(time-lastRender>80){render();lastRender=time
 
 
 export {game};
+
 
 
 

@@ -1,4 +1,4 @@
-import {CONFIG,RECIPES} from './config.js';
+import {CONFIG,RECIPES} from './config.js?v=v5.3';
 export function validTie(points){
  if(points.length<3)return false;
  const xs=points.map(p=>p.x),ys=points.map(p=>p.y);
@@ -39,5 +39,6 @@ export class Game{
  deliver(i){this.tick();const c=this.s.customers[i];if(!this.s.product)return false;if(!c||c.state!=='waiting')return this.say('这位客人已离开，香囊留着给下一位。');if(this.s.product.recipe!==c.recipe)return this.say(c.name+'要的是'+RECIPES[c.recipe].name+'，香囊已放回。');this.s.product=null;this.s.delivered++;c.state='served';c.leaves=this.now()+CONFIG.departure;this.s.message=c.name+'：谢谢掌柜，真香！';this.log('delivered',{id:c.id});return true;}
  discard(){if(this.s.packing)return false;this.s.slots[this.s.selected]=null;return true;}
 }
+
 
 
