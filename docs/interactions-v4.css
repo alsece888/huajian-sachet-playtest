@@ -1,0 +1,19 @@
+.game-stage button,#tieSurface{touch-action:none;-webkit-user-select:none;user-select:none}
+.batch-token{position:absolute;z-index:12;border:1px solid #dcc183;border-radius:18px;padding:7px 5px;min-height:44px;background:linear-gradient(#fff4d5,#d9b876);color:#452e1c;font:bold max(10px,2.5cqw) serif;box-shadow:0 3px 10px #36200b88;touch-action:none;cursor:grab}
+#scaleBatch{left:22%;top:59%;width:28%}#toolBatch{top:67%;width:27%}
+.drag-ghost{position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-110%);padding:15px 20px;background:#fff0c9;border:2px solid #a0753c;border-radius:30px;box-shadow:0 5px 20px #0007;color:#482f1b;font-weight:bold}
+.drop-target{filter:drop-shadow(0 0 7px #fff197)!important;outline:2px solid #f4d678!important;outline-offset:2px;border-radius:10px}
+.work-meter{position:absolute;top:74%;width:19%;height:7px;border:1px solid #e8d6a1;border-radius:9px;background:#293b2a;z-index:9;overflow:hidden}.work-meter span{display:block;height:100%;background:#c9df8e}
+.live-pestle{position:absolute;left:47%;top:9%;width:16%;height:58%;border-radius:40% 40% 25% 25%;background:linear-gradient(90deg,#383b39,#abb0a5 38%,#777b70 63%,#282d29);border:1px solid #3a3c35;box-shadow:2px 3px 4px #0006;transform:rotate(24deg);transform-origin:50% 90%;pointer-events:none}
+.grinding .live-pestle{animation:stir .65s linear infinite}.grinding .prop-mortar{filter:drop-shadow(0 0 6px #cbd99d)}
+@keyframes stir{0%{transform:rotate(24deg) translateX(0)}25%{transform:rotate(4deg) translateX(-6px)}50%{transform:rotate(-20deg)}75%{transform:rotate(0deg) translateX(6px)}100%{transform:rotate(24deg)}}
+.steaming::after{content:'♨';position:absolute;top:0;left:35%;font-size:8cqw;color:#fdf5db;animation:steam 1.5s infinite}
+@keyframes steam{to{transform:translateY(-12px);opacity:0}}
+#finished{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;height:100%;border:1px solid #d7bb77;border-radius:9px;background:#fbecd3eb;color:#493822;font:3cqw serif;cursor:grab}#finished .prop{width:17%;height:100%}.flow-guide{margin:auto;text-align:center;color:#ffedc3;background:#26392dd9;border-radius:6px;padding:6px 10px;font:2.7cqw/1.5 serif}
+#packDialog{width:min(90vw,390px);padding:18px;background:#f4e6ca;color:#493621;border:3px double #927044;border-radius:14px;max-height:92dvh;overflow:auto}#packDialog::backdrop{background:#17271dd6;backdrop-filter:blur(3px)}#packDialog h2{font:25px KaiTi,serif;margin:0}#closePack{min-width:44px;min-height:44px;font-size:26px;border:0;background:none;color:#493621}
+#packHint{font-size:14px;min-height:36px;margin:10px 0}#packChoices{display:flex;gap:6px;flex-wrap:wrap}#packChoices button{flex:1;min-height:52px;border:1px solid #b19a6d;border-radius:6px;background:#fff7e4;color:#523d24;padding:6px;font-size:14px}#packChoices small{display:block;font-size:11px;margin-top:4px}#packChoices .chosen{background:#365c44;color:#fff0c7;border-color:#365c44}
+#tieSurface{position:relative;width:min(100%,280px);aspect-ratio:1;margin:10px auto 0;touch-action:none;opacity:.5}#tieSurface.filled{opacity:1}#tieSurface .prop{position:absolute;inset:0;width:100%;height:100%}#tieSurface svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.tie-guide{position:absolute;top:29%;left:8%;width:84%;color:#fff0b6;text-align:center;font:bold 25px serif;text-shadow:0 1px 4px #4b2019;background:#6d261c88;border-radius:20px;pointer-events:none}.tie-caption{text-align:center;font-size:12px}.received{animation:thank .5s alternate 2}@keyframes thank{to{filter:drop-shadow(0 0 10px #fbe8ad);transform:translateY(-4px)}}
+[hidden]{display:none!important}
+#grind:has(.live-pestle:not([hidden])) .prop-mortar{clip-path:polygon(0 44%,100% 44%,100% 100%,0 100%)}
+.ingredients .selection-mark{display:none}
+

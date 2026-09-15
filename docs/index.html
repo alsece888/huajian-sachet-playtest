@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#594335"><title>花间香囊铺</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="visual-v3.css"><link rel="stylesheet" href="interactions-v4.css"><link rel="stylesheet" href="kitchen-v5.css"></head><body>
+<main class="game-stage" aria-label="花间香囊铺制作游戏">
+<header class="hud"><div class="shop-sign">花间香囊铺<small>制作练习</small></div><div class="served"><span class="prop prop-pouch" aria-hidden="true"></span><span id="delivered">0</span><small>已送出</small></div><button id="settings" class="round" aria-label="打开操作设置">☰</button></header>
+<section class="customers" aria-label="顾客与订单">
+<button class="customer selected" id="customer0" aria-label="选择沈姑娘的玫瑰订单"><span class="order-bubble"><span class="prop prop-pouch" aria-hidden="true"></span><span>玫瑰香囊<small>要一只</small></span></span><span class="portrait portrait0" role="img" aria-label="穿绿色汉服的沈姑娘"></span><span class="customer-name">沈姑娘 <i>接待中</i></span></button>
+<button class="customer" id="customer1" aria-label="选择苏姑娘的丁香订单"><span class="order-bubble"><span class="prop prop-pouch" aria-hidden="true"></span><span>丁香香囊<small>要一只</small></span></span><span class="portrait portrait1" role="img" aria-label="穿蓝色汉服的苏姑娘"></span><span class="customer-name">苏姑娘 <i>点此接待</i></span></button>
+<button class="customer" id="customer2" aria-label="选择陆公子的玫瑰订单"><span class="order-bubble"><span class="prop prop-pouch" aria-hidden="true"></span><span>玫瑰香囊<small>要一只</small></span></span><span class="portrait portrait2" role="img" aria-label="穿白色汉服的陆公子"></span><span class="customer-name">陆公子 <i>点此接待</i></span></button>
+</section>
+<section class="counter" aria-label="香囊制作台">
+<div class="message-bar"><span class="guide-mark">❀</span><p id="message" role="status" aria-live="polite">选一味香料，开始做香囊吧。</p></div>
+<section class="ingredients" aria-label="选香料"><button id="rose" class="basket active"><span class="prop prop-rose" aria-hidden="true"></span><span>玫瑰<small>每批两份</small></span><b class="selection-mark">✓</b></button><button id="clove" class="basket"><span class="prop prop-clove" aria-hidden="true"></span><span>丁香<small>每批两份</small></span><b class="selection-mark">✓</b></button></section>
+<section class="tools" aria-label="称量与研磨"><button id="weigh" class="tool"><span class="tool-name">药戥子 <small>1 秒</small></span><span class="prop prop-scale" aria-hidden="true"></span><span class="tool-action">点击称量</span></button><button id="grind" class="tool"><span class="tool-name">研磨钵 <small>5 秒</small></span><span class="prop prop-mortar" aria-hidden="true"></span><span id="grindLabel" class="tool-action">按住研磨</span></button></section>
+<section class="timing" aria-label="制作时机"><div class="timing-heading"><span id="phase">先选料 · 再称量</span><b id="grade"></b><span id="remaining">准备就绪</span></div><div class="track"><div class="zone barely"></div><div class="zone good"></div><div class="zone perfect"></div><div id="cursor"></div></div><p id="timingHint">松手在绿区 · 深绿色为完美</p></section>
+<section class="storage" aria-label="三格香盘"><div class="tray-row"><button id="slot0" class="tray" aria-label="香盘一"><svg><use href="assets/tools.svg#powder"/></svg><span>空盘</span></button><button id="slot1" class="tray" aria-label="香盘二"><svg><use href="assets/tools.svg#powder"/></svg><span>空盘</span></button><button id="slot2" class="tray" aria-label="香盘三"><svg><use href="assets/tools.svg#powder"/></svg><span>空盘</span></button><button id="discard" class="waste" aria-label="丢弃所选材料"><span>♜</span>倒掉</button></div><div class="storage-caption">香盘台 · 一格一份 <span id="capacity">0 / 3</span></div></section>
+<section class="packing" aria-label="包装与交付"><div class="pouch-display"><span class="prop prop-pouch" aria-hidden="true"></span><span id="product">素布袋</span></div><button id="pack" class="primary">包装香囊<small>3 秒 · 消耗一份</small></button><button id="seal" class="primary" hidden>点击收口<small>指针到绿区时点击</small></button><button id="deliver" class="primary" hidden>交给沈姑娘<small>送出这只香囊</small></button></section>
+</section>
+<footer>一缕清香，半卷诗心 <span>练习中 · 顾客不会离开</span></footer>
+<div id="success" class="success-toast" hidden><span class="prop prop-pouch" aria-hidden="true"></span><strong>香囊送到了</strong><span id="thanks">多谢掌柜，好香呀！</span><button id="continue" class="primary">继续招待</button></div>
+<dialog id="menu"><div class="menu-title"><h2>香铺小记</h2><button id="closeMenu" class="round" aria-label="关闭操作设置">×</button></div><p>选香料 → 称量 → 研磨 → 选香盘 → 包装 → 交给顾客。</p><label class="option"><span>研磨操作<small>默认按住，到绿区松手</small></span><select id="inputMode"><option value="hold">按住与松手</option><option value="tap">点击开始／点击松手</option></select></label><p>研磨固定 5 秒，包装固定 3 秒。失败保留原料，可在原处重试。切换接待对象不丢弃材料。</p><div class="menu-actions"><button id="discardProduct">丢弃包装位成品</button><button id="reset">重新练习</button></div><details><summary>查看操作记录</summary><pre id="log"></pre></details></dialog>
+</main><script type="module" src="visual-v3.js"></script><script type="module" src="app.js"></script><script type="module" src="playtest.js"></script></body></html>
+
+
+
+
+
+

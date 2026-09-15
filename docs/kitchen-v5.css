@@ -1,0 +1,37 @@
+/* The counter is a live kitchen: separate stations, physical ingredients and staggered guests. */
+.customer[hidden]{display:none!important}.customers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.customer-name,.customer.selected .customer-name{background:#f4e8c9;color:#483c26;text-shadow:none;border:0;bottom:0;height:8%;border-radius:3px;box-shadow:none}
+.patience{position:absolute;bottom:10%;left:10%;width:80%;height:7px;border:1px solid #fff1c7;border-radius:10px;background:#303e2d;overflow:hidden;z-index:8}
+.patience i{display:block;height:100%;background:#a2cb73;transition:width .15s linear}
+.emotion{position:absolute;top:37%;left:0;width:100%;font-size:max(9px,2.3cqw);color:#365638;text-align:center;z-index:9;background:#fff8dcd9;border-radius:12px;padding:2px 0}
+.customer[data-mood="worried"] .emotion{color:#895823;background:#fff0bc}.customer[data-mood="worried"] .patience i{background:#e4ba5a}
+.customer[data-mood="angry"] .emotion,.customer[data-mood="left"] .emotion{color:#912f27;background:#ffe0bd}
+.customer[data-mood="angry"] .patience i{background:#d56551}
+.customer[data-mood="worried"] .portrait{animation:impatient 1.8s ease-in-out infinite}
+.customer[data-mood="angry"] .portrait{animation:impatient .7s ease-in-out infinite;filter:sepia(.16) saturate(1.2)}
+.customer[data-mood="served"],.customer[data-mood="left"]{animation:guest-out 1.8s ease forwards}
+.customer.entering{animation:guest-in .6s ease-out}.customer.entering[data-mood="served"],.customer.entering[data-mood="left"]{animation:guest-out 1.8s ease forwards}
+@keyframes guest-in{from{transform:translateX(24px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes guest-out{0%,55%{opacity:1}100%{transform:translateX(28px);opacity:0}}
+@keyframes impatient{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) rotate(1deg)}}
+.batch-token{background:none;border:0;box-shadow:none;padding:0;min-height:44px;cursor:grab;border-radius:0}
+.batch-token .material-art{width:100%;height:100%;filter:drop-shadow(0 2px 2px #402b1a)}
+.batch-token small{position:absolute;bottom:0;left:0;width:100%;font:2.4cqw serif;color:#fff4c6;text-shadow:0 1px 2px #321d0c;background:#4b3826a8;border-radius:6px}
+#scaleBatch{left:22%;top:56.8%;width:24%;height:8%;z-index:6}#scaleBatch.unweighed{pointer-events:none}
+#grindBatch{left:52%;top:62%;width:23%;height:10%;z-index:10}#steamBatch{left:77%;top:60%;width:21%;height:10%;z-index:10}
+#grindMeter{left:52%;top:74%;width:21%}#steamMeter{left:77%;top:74%;width:20%}
+.tool-contents{position:absolute;pointer-events:none;z-index:4;width:18%;height:7%}.tool-contents svg{width:100%;height:100%}.tool-contents small{display:none}
+#grindContents{left:54%;top:63.5%}#steamContents{left:78%;top:59.5%}
+.live-pestle{z-index:8}
+.physical-ghost{width:85px;height:90px;padding:0;background:none;border:0;box-shadow:none;transform:translate(-50%,-60%);filter:drop-shadow(0 8px 7px #1e160a66)}
+.physical-ghost .material-art,.physical-ghost .prop{width:100%;height:100%;display:block}.physical-ghost small,.physical-ghost #finishedLabel{display:none}
+#finished{width:48%;margin:auto;background:none;border:0;box-shadow:none;position:relative}#finished .prop{width:80%;height:125%}#finishedLabel{position:absolute;bottom:0;font-size:2.5cqw;white-space:nowrap;background:#f5e5c1e8;padding:2px 6px;border-radius:6px}
+.weighing .prop-scale{animation:balance .5s ease-in-out 2}@keyframes balance{50%{transform:rotate(3deg)}}
+.flow-guide{font-size:2.5cqw}.order-bubble{height:36%}
+.customer .portrait{background-image:url("assets/customers-emotions-v5.png");background-size:300% 300%;background-position-y:0}
+.customer[data-mood="worried"] .portrait{background-position-y:50%}
+.customer[data-mood="angry"] .portrait,.customer[data-mood="left"] .portrait{background-position-y:100%}
+.customer[data-mood="served"] .portrait{background-position-y:0}
+#packChoices .material-art{display:block;width:48px;height:36px;margin:0 auto}#packChoices button{position:relative}
+#tieSurface{width:min(100%,280px,38dvh)}
+
