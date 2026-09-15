@@ -1,6 +1,6 @@
 import {game} from './app.js';
 import {CONFIG} from './config.js';
-const version='外测 V5.1 · 2026-09-15';
+const version='外测 V5.2 · 2026-09-15';
 const modal=document.createElement('dialog');
 modal.id='playtestWelcome';
 modal.innerHTML='<h2>花间香铺 · 试玩</h2><p>客人会陆续到店，记得留意他们的耐心。</p><ol><li>拖香料到秤上，再拖去研磨或蒸制。</li><li>长按研磨棒；蒸制会自动完成。</li><li>两份成料拖入同一个空香盘。</li><li>点左侧香囊，选料、划线绑紧，拖给顾客。</li></ol><p>本版开放玫瑰、丁香。建议手机竖屏体验。</p><button id="beginPlaytest">开始试玩</button><small>'+version+'</small>';
@@ -20,4 +20,5 @@ download.onclick=()=>{
  const a=document.createElement('a');a.href=url;a.download='huajian-playtest-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 menu.append(info,download);
+
 

@@ -20,7 +20,7 @@ document.querySelector('.shop-sign').innerHTML='花间香铺<small>开门迎客<
 document.querySelector('.practice-clock').id='queueClock';
 for(let i=0;i<3;i++){
  const c=$('customer'+i);c.insertAdjacentHTML('beforeend','<span class="emotion"></span><span class="patience"><i></i></span>');
- c.classList.remove('selected');
+ c.classList.remove('selected');c.querySelector('.order-bubble').innerHTML='<span class="recipe-heading">配料表</span><span class="order-recipe"></span>';
 }
 function setText(el,value){if(el.textContent!==String(value))el.textContent=value;}
 function setMarkup(el,value){if(el._markup!==value){el.innerHTML=value;el._markup=value;}}
@@ -101,10 +101,14 @@ function render(){
   const c=s.customers[i],b=$('customer'+i);b.hidden=!c;if(!c)continue;
   if(b.dataset.guest!==String(c.id)){b.dataset.guest=c.id;b.classList.remove('entering');void b.offsetWidth;b.classList.add('entering');}
   const mood=c.state==='waiting'?game.mood(c):c.state;
-  b.dataset.mood=mood;b.setAttribute('aria-label',c.name+'，'+RECIPES[c.recipe].name+'香囊，'+({calm:'平静',worried:'着急',angry:'不耐烦',served:'满意离开',left:'生气离开'}[mood]));
-  b.querySelector('.portrait').style.backgroundPositionX=(c.portrait*50)+'%';
+  b.dataset.mood=mood;b.setAttribute('aria-label',c.name+'，配料：'+RECIPES[c.recipe].name+'一份，'+({calm:'平静',worried:'着急',angry:'不耐烦',served:'满意离开',left:'生气离开'}[mood]));
+    const row=mood==='worried'?1:['angry','left'].includes(mood)?2:0;
+  const portrait=b.querySelector('.portrait');
+  setMarkup(portrait,'<svg viewBox="0 0 374 467.333333" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><image href="assets/customers-emotions-v5.png" width="1122" height="1402" x="'+(-374*c.portrait)+'" y="'+(-1402/3*row)+'"/></svg>');
+  portrait.setAttribute('aria-label',c.name+'，'+({calm:'平静',worried:'着急',angry:'不耐烦',served:'开心',left:'生气'}[mood]));
   setText(b.querySelector('.customer-name'),c.name);
-  setText(b.querySelector('.order-recipe'),c.state==='waiting'?RECIPES[c.recipe].name+'香囊':c.state==='served'?'谢谢掌柜！':'不等了…');
+    setText(b.querySelector('.recipe-heading'),c.state==='waiting'?'配料表':'');
+  setMarkup(b.querySelector('.order-recipe'),c.state==='waiting'?'<span class="recipe-item">'+materialArt(c.recipe,true).replace(/<small>.*<\/small>/,'')+'<span>'+RECIPES[c.recipe].name+' ×1</span></span>':c.state==='served'?'谢谢掌柜！':'不等了…');
   setText(b.querySelector('.emotion'),{calm:'☺ 慢慢来',worried:'◷ 还要多久',angry:'💢 等太久了',served:'♡ 真香！',left:'💢 下次再说'}[mood]);
   const p=game.patience(c);b.querySelector('.patience i').style.width=(p*100)+'%';
   b.querySelector('.patience').setAttribute('aria-label','耐心剩余 '+Math.ceil(p*65)+' 秒');
@@ -136,5 +140,8 @@ function render(){
 let lastRender=0;
 function frame(time){game.tick();if(time-lastRender>80){render();lastRender=time;}requestAnimationFrame(frame);}render();requestAnimationFrame(frame);
 
+
 export {game};
+
+
 
