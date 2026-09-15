@@ -1,0 +1,86 @@
+/* V6 physical ingredients, workbench packaging and timing games. */
+.item-art{display:block;width:100%;height:100%;overflow:hidden;pointer-events:none}
+.bag-art{display:block;width:100%;height:100%;pointer-events:none}
+.mixture{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:100%;pointer-events:none}
+.mixture .item-art{min-width:0;flex:1;height:100%;filter:drop-shadow(0 1px 1px #321b1366)}
+.mixture.count-3,.mixture.count-4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:0}
+.two-portions{display:flex;align-items:center;width:100%;height:100%;pointer-events:none}
+.two-portions>.mixture{width:55%;margin-right:-10%}.two-portions>.mixture:last-child{transform:translateY(12%)}
+.basket .empty-basket{position:absolute;inset:0;width:100%;height:100%}
+.basket .stock-herbs{position:absolute;left:10%;top:-6%;width:80%;height:62%;transform-origin:50% 75%;transition:transform .15s}
+.basket .herb-label{z-index:3;top:auto;bottom:18%;font-size:3cqw}
+.basket .stock-dots{z-index:3;bottom:4%;color:#69553c;letter-spacing:1px}
+.basket .restock-note{position:absolute;z-index:5;top:20%;left:4%;width:92%;color:#fff6da;background:#47613ddb;border-radius:6px;font-size:2.6cqw}
+.basket .restock-note:empty{display:none}
+.basket .locked-note{top:22%;right:12%;font-size:2.5cqw;background:#6b665acc}
+.basket.preview-material{opacity:1;filter:none}
+.order-bubble .order-recipe{display:flex;gap:2%;width:100%;height:100%;padding:3%;box-sizing:border-box}
+.order-recipe>.bag-art{width:63%;height:100%;flex:none}
+.order-ingredients{width:32%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ingredient-icon{display:inline-flex;flex:1;min-height:0;aspect-ratio:1;max-width:100%}
+.order-ingredients .ingredient-icon{width:100%;max-height:45%}
+.customer .order-bubble{padding:1%;height:38%}
+.customer .portrait{height:65%;width:108%;background:none!important}
+.customer[data-mood="disappointed"] .emotion{background:#ffe0bd;color:#912f27}
+.customer[data-mood="disappointed"]{animation:guest-out 1.8s ease forwards}
+.income{position:absolute;z-index:20;left:0;right:0;top:22%;font:bold 4.5cqw serif;color:#fff2a3;text-shadow:0 2px 3px #513213}
+.income:empty{display:none}.customer[data-mood="served"] .income,.customer[data-mood="disappointed"] .income{animation:income 1.8s ease-out}
+@keyframes income{from{transform:translateY(8px)}to{transform:translateY(-18px)}}
+.hud .served{gap:4px;font-size:4.2cqw}.hud .served small{display:inline;font-size:2.5cqw}.silver-icon{color:#eee9d8;text-shadow:0 1px 2px #51482c}.practice-clock{font-variant-numeric:tabular-nums}
+#grind .empty-mortar{position:absolute;inset:15% 0 0;width:100%;height:85%;clip-path:none}
+#steam .empty-steamer{position:absolute;inset:0;width:100%;height:100%}
+.live-pestle{background:none;border:0;box-shadow:none;left:24%;top:-5%;width:70%;height:72%;transform:rotate(-12deg);z-index:8;transform-origin:45% 85%}
+.grinding .live-pestle{animation:stir-v6 1s linear infinite}
+@keyframes stir-v6{0%,100%{transform:rotate(-12deg) translateX(-2px)}50%{transform:rotate(6deg) translateX(4px)}}
+#grindContents{left:54%;top:63.4%;width:19%;height:5%;z-index:6}
+#steamContents{left:79%;top:58.5%;width:17%;height:5%;z-index:6}
+#grindBatch{top:62%;left:52%;width:23%;height:9%;z-index:11}
+#steamBatch{top:58.5%;left:77%;width:21%;height:9%;z-index:11}
+#scaleBatch{left:23%;top:58%;width:24%;height:6%;z-index:11;min-height:0}
+.batch-token{padding:0;border:0;background:none;box-shadow:none}
+#grindLabel,#steam small,#weigh .tool-action{font-size:2.3cqw;white-space:nowrap}
+.timing-meter{position:absolute;top:74%;height:3.3%;min-height:24px;border:1px solid #f4dfb0;border-radius:6px;background:#433d2be6;z-index:15;overflow:hidden;padding:0;touch-action:none}
+#grindMeter{left:51%;width:23%}#steamMeter{left:76%;width:22%}
+.timing-meter .green-zone{position:absolute;top:0;height:100%;background:#8bce57}
+#grindMeter .green-zone{left:64.935%;width:19.481%}
+#grindMeter i{position:absolute;top:0;height:100%;width:3px;background:#fff5ce;box-shadow:0 0 3px #111}
+#grindMeter.in-green{box-shadow:0 0 8px #c6f3a1}
+#steamMeter .green-zone{width:28%;border:1px solid #dbf7b7;box-sizing:border-box}
+#steamMeter b{position:absolute;right:2px;top:1px;font:2.5cqw sans-serif;color:white;text-shadow:0 1px 2px #183b17;pointer-events:none}
+.storage{top:79%;height:9%}
+.tray-row>.tray{position:relative;display:block;overflow:visible;min-width:0}
+.tray button{position:absolute;padding:0;border:0;box-shadow:none;background:none;min-width:0;min-height:0;touch-action:none;cursor:grab}
+.plate-material{left:7%;top:0;width:86%;height:80%;z-index:6}
+.has-bag .plate-material{left:0;width:46%;top:10%;height:65%}
+.plate-bag{right:12%;top:-25%;width:76%;height:110%;z-index:7}
+.has-material .plate-bag{right:-7%;width:65%}
+.bag-status{position:absolute;bottom:8%;left:12%;width:76%;font:2.3cqw serif;background:#f6e7c7e8;color:#5a4228;border-radius:4px;text-align:center}
+#discard .waste-label{font-size:3cqw;background:#e9d8ac;color:#453420;writing-mode:vertical-rl;left:35%;top:26%;height:55%;padding:4px 0}
+#ingredientTip{position:absolute;z-index:35;display:flex;gap:2px;height:36px;padding:3px 6px;border:1px solid #967245;border-radius:20px;background:#fff4dceF;box-shadow:0 3px 10px #33261488;pointer-events:none}
+#ingredientTip .ingredient-icon{width:30px;height:30px;flex:none}
+#bagIngredients{display:flex;justify-content:center;height:48px;gap:6px}
+#bagIngredients .ingredient-icon{flex:none;width:48px}
+#tieSurface{opacity:1}
+#tieBag{position:absolute;inset:0}#tieBag .bag-art{width:100%;height:100%}
+#dayEnd{width:min(88vw,380px);border:3px double #987747;background:#f4e6ca;color:#493621;padding:24px;border-radius:12px;box-sizing:border-box}
+#dayEnd::backdrop{background:#263627cf}#dayEnd p{font-size:15px;line-height:1.6}#dayEnd button{padding:12px;width:100%;border:0;border-radius:6px;background:#365c44;color:#fff6de;font-size:18px}
+.flow-guide{font-size:2.5cqw}.message-bar{top:88%;height:3.4%}
+.physical-ghost{width:86px;height:86px;background:none;border:0;box-shadow:none;padding:0;transform:translate(-50%,-60%)}
+.physical-ghost .bag-art{width:100%;height:100%}
+@media(prefers-reduced-motion:reduce){.customer,.customer .portrait,.live-pestle,.income{animation:none!important}}
+/* Neutralize legacy primitive styling inside the new sprites. */
+.ingredients .basket .stock-herbs{background:none;border:0;padding:0}
+.tray span{position:static;bottom:auto;background:none;border-radius:0;padding:0;opacity:1!important}
+.tray .mixture{position:relative;display:flex}
+.tray .mixture.count-3,.tray .mixture.count-4{display:grid}
+.tray .item-art{position:static;top:auto;visibility:visible;width:100%;height:100%}
+.tray .plate-bag .bag-status{position:absolute;bottom:8%;background:#f6e7c7e8;border-radius:4px;padding:1px}
+.order-bubble .ingredient-icon .item-art{width:100%;height:100%}
+.item-art>svg{width:362px!important;height:362px!important;position:static!important;min-height:0!important}
+.portrait>svg>svg{width:374px!important;height:467.333333px!important}
+.live-pestle .item-art{height:100%;min-height:0}
+.tray .bag-art{display:block;width:100%;height:100%;background-image:url('assets/atlas-v3.png');background-size:400% 250%;background-repeat:no-repeat}
+.tray .atlas-9{background-position:33.333% 100%}.tray .atlas-10{background-position:66.667% 100%}
+.tray .item-art>svg{visibility:visible}
+.tray .two-portions{display:flex;width:100%;height:100%}
+
