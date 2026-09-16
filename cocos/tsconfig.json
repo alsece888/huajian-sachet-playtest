@@ -1,0 +1,11 @@
+{
+  "extends": "./temp/tsconfig.cocos.json",
+  "compilerOptions": {
+    "strict": false,
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "skipLibCheck": true
+  }
+}

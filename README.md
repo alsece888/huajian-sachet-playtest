@@ -1,3 +1,12 @@
+# 花间香铺 · Cocos C1
+
+**Cocos 试玩：https://alsece888.github.io/huajian-sachet-playtest/cocos/?v=c1**
+
+Creator 3.8.8 原生 2D 场景、精灵与触摸事件；完整工程在 cocos/ 目录，打开 cocos/assets/scenes/Shop.scene。
+沿用已确认的 V6 玩法，18 项规则检查与 12 步浏览器触摸检查均通过。
+工程说明与构建方法见 cocos/README.md，验收记录见 cocos/ACCEPTANCE.md。
+
+以下保留 V6 网页基准说明，便于对照：
 # 花间香铺 · 外测 V6.0
 
 手机竖屏试玩：https://alsece888.github.io/huajian-sachet-playtest/?v=v6.0
@@ -27,4 +36,3 @@
 ## 开发
 静态入口 docs/index.html，GitHub Pages 使用 main 分支的 /docs。
 运行规则检查：node --test tests/game.test.mjs
-

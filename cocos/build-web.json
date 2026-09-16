@@ -1,0 +1,32 @@
+{
+  "name": "huajian-sachet",
+  "platform": "web-mobile",
+  "buildPath": "project://build",
+  "outputName": "web-mobile",
+  "startScene": "b4ede572-7f7a-47a1-83e1-31b2ebfcc2ae",
+  "scenes": [
+    {
+      "url": "db://assets/scenes/Shop.scene",
+      "uuid": "b4ede572-7f7a-47a1-83e1-31b2ebfcc2ae"
+    }
+  ],
+  "debug": false,
+  "md5Cache": true,
+  "sourceMaps": false,
+  "orientation": "portrait",
+  "packages": {
+    "web-mobile": {
+      "orientation": "portrait",
+      "embedWebDebugger": false
+    }
+  },
+  "includedModules": [
+    "2d",
+    "ui",
+    "graphics",
+    "base",
+    "gfx-webgl",
+    "gfx-webgl2",
+    "tween"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "__version__": "1.0.6",
+  "general": {
+    "designResolution": {
+      "width": 1080,
+      "height": 1920,
+      "fitWidth": true,
+      "fitHeight": true
+    }
+  },
+  "startScene": "b4ede572-7f7a-47a1-83e1-31b2ebfcc2ae",
+  "fbx": {
+    "legacyFbxImporter": {
+      "visible": true
+    }
+  }
+}
