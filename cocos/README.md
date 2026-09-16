@@ -45,3 +45,8 @@ Windows PowerShell：
 18/18 项规则检查通过；浏览器触摸事件实际完成 12 个检查步骤，详见 ACCEPTANCE.md。
 当前交付 Cocos 工程与 Web Mobile 试玩构建。尚未构建微信/抖音小游戏或安装包，尚无实体手机样本。
 这是玩法迁移版本，沿用 V6 美术和数值；后续可在此工程继续拆分预制体和扩展内容。
+# C2 性能优化
+
+试玩：https://alsece888.github.io/huajian-sachet-playtest/cocos/?v=c2
+
+2026-09-16：网页包约 4.93 MB，复用动态进度条和材料提示；验证与限制见 [PERFORMANCE-C2.md](PERFORMANCE-C2.md)。

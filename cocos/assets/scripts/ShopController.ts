@@ -2,7 +2,7 @@ import {
  _decorator,Component,Node,Sprite,SpriteFrame,Texture2D,ImageAsset,resources,
  UITransform,Label,Graphics,Color,Rect,Size,Vec2,Vec3,Layers,
  input,Input,EventTouch,EventMouse,EventKeyboard,KeyCode,
- view,ResolutionPolicy,game as engineGame,Game as EngineGame
+ view,ResolutionPolicy,builtinResMgr,game as engineGame,Game as EngineGame
 } from 'cc';
 import {Game} from './game';
 import {CONFIG,RECIPES,HERBS} from './config';
@@ -10,6 +10,7 @@ const {ccclass}=_decorator;
 type Box={x:number,y:number,w:number,h:number};
 type Target=Box&{id:string,kind:string,key?:any};
 type Drag={id:string,target:Target,start:Vec2,last:Vec2,moved:boolean,consumed?:boolean,points?:{x:number,y:number}[]};
+type Meter={root:Node,fill:Node,marker?:Node};
 const W=1080,H=1920;
 const box=(x:number,y:number,w:number,h:number):Box=>({x:x*W/100,y:y*H/100,w:w*W/100,h:h*H/100});
 const inside=(p:Vec2,r:Box)=>p.x>=r.x&&p.y>=r.y&&p.x<=r.x+r.w&&p.y<=r.y+r.h;
@@ -32,7 +33,8 @@ export class ShopController extends Component{
  private modal:'welcome'|'menu'|'tie'|'end'|null=null; private ready=false; private dirty=true;
  private timeMs=0; private redraw=0; private tipUntil=0; private toolPhase=''; private dayShown='';
  private clockShown=''; private lastPatience=''; private moneyShown=-1;
- private pestle:Node; private grindTrack:Graphics; private steamTrack:Graphics; private tieLine:Graphics;
+ private pestle:Node; private grindTrack:Meter; private steamTrack:Meter; private tieLine:Graphics;
+ private patienceBars:Meter[]=[]; private solidFrame:SpriteFrame; private tipKey='';
  private loading:Label;
  onLoad(){
   view.setDesignResolutionSize(W,H,ResolutionPolicy.SHOW_ALL);
@@ -54,7 +56,7 @@ export class ShopController extends Component{
   input.off(Input.EventType.TOUCH_END,this.touchEnd,this);input.off(Input.EventType.TOUCH_CANCEL,this.touchCancel,this);
   input.off(Input.EventType.MOUSE_DOWN,this.mouseDown,this);input.off(Input.EventType.MOUSE_MOVE,this.mouseMove,this);input.off(Input.EventType.MOUSE_UP,this.mouseUp,this);
   input.off(Input.EventType.KEY_DOWN,this.keyDown,this);engineGame.off(EngineGame.EVENT_HIDE,this.hide,this);engineGame.off(EngineGame.EVENT_SHOW,this.show,this);
-  for(const f of this.frames.values())f.destroy();for(const t of Object.values(this.textures))t.destroy();
+  for(const f of this.frames.values())f.destroy();for(const t of Object.values(this.textures))t.destroy();this.solidFrame?.destroy();
  }
  private create(name:string,parent:Node,r?:Box,center=false){
   const n=new Node(name);n.layer=Layers.Enum.UI_2D;parent.addChild(n);
@@ -92,6 +94,19 @@ export class ShopController extends Component{
   const n=this.create(name,parent,r),l=n.addComponent(Label);l.string=value;l.fontFamily='KaiTi';l.fontSize=size;l.lineHeight=size*1.3;
   l.color=new Color(color);l.horizontalAlign=Label.HorizontalAlign.CENTER;l.verticalAlign=Label.VerticalAlign.CENTER;
   l.overflow=Label.Overflow.SHRINK;l.enableWrapText=true;return l;
+ }
+ // Shared solid texture: moving/filling a meter updates its transform, not vector geometry.
+ private solid(parent:Node,name:string,r:Box,color:string){
+  if(!this.solidFrame){this.solidFrame=new SpriteFrame();this.solidFrame.texture=builtinResMgr.get<Texture2D>('white-texture');this.solidFrame.packable=false;}
+  const n=this.create(name,parent,r),s=n.addComponent(Sprite);s.sizeMode=Sprite.SizeMode.CUSTOM;s.spriteFrame=this.solidFrame;s.color=new Color(color);
+  n.getComponent(UITransform).setContentSize(r.w,r.h);n.getComponent(UITransform).setAnchorPoint(0,0);
+  n.setPosition(r.x-W/2,H/2-r.y-r.h);return n;
+ }
+ private meter(name:string,r:Box,marker=false):Meter{
+  const root=this.create(name,this.effects);this.solid(root,'Track',r,'#453d2d');
+  const fill=this.solid(root,'Fill',r,'#8dc854');
+  const pointer=marker?this.solid(root,'Marker',{...r,w:6},'#fff6d8'):undefined;
+  root.active=false;return{root,fill,marker:pointer};
  }
  private panel(parent:Node,name:string,r:Box,fill=PAPER,border=GOLD,radius=14){
   const n=this.create(name,parent,r),g=n.addComponent(Graphics);g.fillColor=new Color(fill);g.strokeColor=new Color(border);g.lineWidth=3;
@@ -131,8 +146,9 @@ export class ShopController extends Component{
    const r=m==='scale'?box(20,72.2,30,2.4):m==='grind'?box(51,72.2,24,2.4):box(76,72.2,23,2.4);
    this.panel(this.fixed,m+' caption',r,PAPER,GOLD,5);this.labels[m]=this.label(this.fixed,m+' instruction','拖入香料',r,25);
   }
-  this.grindTrack=this.create('Grinding timing',this.effects).addComponent(Graphics);
-  this.steamTrack=this.create('Steam timing',this.effects).addComponent(Graphics);
+  this.grindTrack=this.meter('Grinding timing',AREAS.grindMeter,true);
+  this.steamTrack=this.meter('Steam timing',AREAS.steamMeter);
+  for(let i=0;i<3;i++){const r=this.guest(i);this.patienceBars.push(this.meter('Patience '+i,{x:r.x+r.w*.06,y:r.y+r.h*.925-13,w:r.w*.88,h:13}));}
   this.target('grindMeter','grindMeter',AREAS.grindMeter);this.target('steamMeter','steamMeter',AREAS.steamMeter);
   this.panel(this.fixed,'Message',box(19,88.1,64,4.3));this.labels.message=this.label(this.fixed,'Message text','',box(20,88.3,62,3.9),28);
   this.panel(this.fixed,'Flow',box(19,93,64,5),GREEN,GOLD,8);
@@ -186,30 +202,30 @@ export class ShopController extends Component{
    }
   });}
  }
- private track(g:Graphics,r:Box,greenStart:number,greenWidth:number,marker?:number){
-  g.clear();g.fillColor=new Color('#453d2d');g.roundRect(r.x-W/2,H/2-r.y-r.h,r.w,r.h,7);g.fill();
-  g.fillColor=new Color('#8dc854');g.rect(r.x-W/2+r.w*greenStart,H/2-r.y-r.h,r.w*greenWidth,r.h);g.fill();
-  if(marker!==undefined){g.fillColor=new Color('#fff6d8');g.rect(r.x-W/2+r.w*marker-3,H/2-r.y-r.h,6,r.h);g.fill();}
+ private track(m:Meter,r:Box,greenStart:number,greenWidth:number,marker?:number){
+  m.root.active=true;m.fill.setScale(greenWidth,1,1);m.fill.setPosition(r.x-W/2+r.w*greenStart,H/2-r.y-r.h);
+  if(marker!==undefined)m.marker.setPosition(r.x-W/2+r.w*marker-3,H/2-r.y-r.h);
  }
  update(dt:number){
   this.timeMs+=dt*1000;if(!this.ready)return;this.model.tick();
   if(this.model.s.closed&&this.modal!=='end'){this.cancelDrag();this.showModal('end');}
   const clock=this.model.clock();if(clock!==this.clockShown){this.clockShown=clock;this.setLabel('clock',clock);}
-  this.redraw+=dt;if(this.redraw<1/30)return;this.redraw=0;
+  this.redraw+=dt;if(this.redraw<1/30)return;this.redraw%=1/30;
   const s=this.model.s,g=s.tools.grind,t=s.tools.steam;
   const moodKey=s.customers.map(c=>c?.state==='waiting'?this.model.mood(c):c?.state).join();
   if(moodKey!==this.lastPatience){this.lastPatience=moodKey;this.dirty=true;}
   if(this.dirty)this.render();
+  if(!this.model.running())return;
   this.pestle.active=g?.stage==='processing';
   if(this.pestle.active)this.pestle.angle=Math.sin(this.timeMs/170)*9;
   if(g?.stage==='processing'){
    const total=CONFIG.grindGreenEnd+1200;this.track(this.grindTrack,AREAS.grindMeter,CONFIG.durations.grind/total,(CONFIG.grindGreenEnd-CONFIG.durations.grind)/total,this.model.grindPhase()/total);
    this.setLabel('grind',this.model.grindGreen()?'现在点击研磨钵！':'研磨中 · 等待绿区');
-  }else this.grindTrack.clear();
-  if(t?.stage==='processing'){this.track(this.steamTrack,AREAS.steamMeter,this.model.steamTarget()-CONFIG.steamWidth/2,CONFIG.steamWidth);this.setLabel('steam','跟随绿区 · '+t.progress+'%');}else this.steamTrack.clear();
-  const bars=this.group('patience',this.effects);let graphics=bars.getComponent(Graphics);if(!graphics)graphics=bars.addComponent(Graphics);graphics.clear();
-  s.customers.forEach((c,i)=>{if(!c)return;const r=this.guest(i),p=this.model.patience(c),x=r.x+r.w*.06-W/2,y=H/2-r.y-r.h*.925,w=r.w*.88;
-   graphics.fillColor=new Color('#394437');graphics.roundRect(x,y,w,13,6);graphics.fill();graphics.fillColor=new Color(p>.6?'#9ac77b':p>.25?'#dfb356':'#d46551');graphics.roundRect(x,y,Math.max(1,w*p),13,6);graphics.fill();
+  }else this.grindTrack.root.active=false;
+  if(t?.stage==='processing'){this.track(this.steamTrack,AREAS.steamMeter,this.model.steamTarget()-CONFIG.steamWidth/2,CONFIG.steamWidth);this.setLabel('steam','跟随绿区 · '+t.progress+'%');}else this.steamTrack.root.active=false;
+  this.patienceBars.forEach((bar,i)=>{const c=s.customers[i];bar.root.active=!!c;if(!c)return;const p=this.model.patience(c);
+   bar.fill.setScale(Math.max(.001,p),1,1);const color=p>.6?'#9ac77b':p>.25?'#dfb356':'#d46551';
+   const key='patience-color-'+i;if(this.signatures[key]!==color){this.signatures[key]=color;bar.fill.getComponent(Sprite).color=new Color(color);}
   });
   if(this.timeMs>this.tipUntil&&this.groups.tip)this.groups.tip.active=false;
  }
@@ -306,7 +322,8 @@ export class ShopController extends Component{
   else if(t.kind==='scale')list=this.model.ingredients('scale');
   else if(t.kind==='station')list=this.model.ingredients('tool',t.key);
   else if(t.kind==='material'||t.kind==='bag')list=this.model.ingredients(t.kind,t.key);
-  if(!list.length)return;const group=this.group('tip',this.effects);group.active=true;this.clear(group);
+  if(!list.length)return;const group=this.group('tip',this.effects),key=t.id+':'+list.join(',');group.active=true;this.tipUntil=this.timeMs+1800;
+  if(this.tipKey===key)return;this.tipKey=key;this.clear(group);
   const w=list.length*78+24,r={x:Math.max(12,Math.min(W-w-12,t.x+t.w/2-w/2)),y:Math.max(140,t.y-105),w,h:84};
   this.panel(group,'Ingredients',r,PAPER,GOLD,30);list.forEach((h,i)=>this.item(group,RECIPES[h].art,{x:r.x+12+i*78,y:r.y+6,w:72,h:72}));this.tipUntil=this.timeMs+1800;
  }
