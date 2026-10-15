@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>花间香铺｜确认版界面特效 A/B/C 审核</title>
+  <style>
+    :root{--ink:#3d3035;--muted:#806c74;--rose:#9e6376;--line:#e6d6d8;--paper:#fffaf8}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Microsoft YaHei","PingFang SC",sans-serif}button,textarea,select{font:inherit}button{cursor:pointer}
+    header{padding:26px 20px 22px;background:linear-gradient(100deg,#694657,#aa7586);color:white;text-align:center}h1{font:normal 36px/1.2 "STSong","SimSun",serif;margin:0 0 7px}header p{margin:0;color:#fff1f3}
+    .wrap{max-width:1530px;margin:auto;padding:20px}.notice{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:16px}.notice strong{color:#954d67}
+    .pick,.versions{display:flex;flex-wrap:wrap;gap:8px}.pick{margin-bottom:16px}.pick button,.version-tab{border:1px solid #dbc4ca;background:white;color:#744958;border-radius:8px;padding:8px 12px}.pick button.on,.version-tab.on{color:white;background:var(--rose);border-color:var(--rose)}
+    .compare-title{font:normal 24px/1.3 "STSong","SimSun",serif;margin:2px 0 6px}.hint{color:var(--muted);font-size:13px;margin:0 0 10px}
+    .versions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}.version-card{padding:10px;text-align:left;border:2px solid var(--line);border-radius:12px;background:white;color:var(--ink);box-shadow:0 6px 18px #5630430d}.version-card.on{border-color:var(--rose);box-shadow:0 0 0 3px #bd839229}.version-card img{width:100%;height:165px;object-fit:contain;display:block;background:#f8f1ed;border-radius:6px}.version-card .label{display:flex;justify-content:space-between;gap:8px;margin:8px 0 3px;font-weight:700}.version-card .label em{font-style:normal;color:#a45f75}.version-card small{display:block;color:var(--muted);font-size:13px}
+    .views{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:16px;align-items:start}.panel{border:1px solid var(--line);background:white;border-radius:12px;padding:10px;box-shadow:0 8px 22px #56304310}.panel h2{font-size:15px;margin:0 0 9px;color:#7b5664}.panel img{display:block;width:100%;height:auto;border-radius:5px}.detail{display:flex;justify-content:center;align-items:center;min-height:320px;background:#f5efed}.detail img{max-height:670px;width:auto;max-width:100%;object-fit:contain}
+    .meta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:18px 0 12px}.meta h2{font:normal 26px/1.3 "STSong","SimSun",serif;margin:0}.links{display:flex;gap:14px;flex-wrap:wrap}.links a{color:#92506b}
+    .review-box{background:white;border:1px solid var(--line);border-radius:12px;padding:15px}.review-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.review-head strong{font-size:17px}.choice{display:flex;align-items:center;gap:9px}.choice select{min-width:145px}.review{display:grid;grid-template-columns:190px 1fr;gap:12px}select,textarea{border:1px solid #d8bdc6;background:white;border-radius:8px;padding:10px;color:var(--ink)}textarea{resize:vertical;min-height:95px}.general{margin-top:18px}.general textarea{display:block;width:100%}.foot{color:var(--muted);font-size:13px;margin:15px 0}button.export{border:0;border-radius:8px;background:#754a5b;color:white;padding:11px 18px;font-weight:700}button:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #e0aabe;outline-offset:2px}
+    @media(max-width:1000px){.views{grid-template-columns:1fr}.detail img{max-height:450px}.review{grid-template-columns:1fr}}@media(max-width:650px){.versions{grid-template-columns:1fr}.version-card img{height:190px}.meta{display:block}.links{margin-top:8px}}
+  </style>
+</head>
+<body>
+  <header><h1>确认版界面 · 特效 A/B/C 审核</h1><p>同一张原图上查看三种表现方式，逐版留下修改备注。</p></header>
+  <main class="wrap">
+    <div class="notice"><strong>审核范围：</strong>研磨完成不使用特效，已从预览中移除。这里展示其余 8 项；点击局部图切换完整预览，所有效果都贴在已确定的原图上。</div>
+    <nav class="pick" id="pick" aria-label="选择特效"></nav>
+    <h2 class="compare-title" id="compareTitle"></h2><p class="hint">先看三版局部对比，再点击想检查的版本。</p>
+    <section class="versions" id="versions" aria-label="A B C 三版局部对比"></section>
+    <div class="views">
+      <section class="panel"><h2>完整原图叠加</h2><img id="full" alt="完整原图叠加特效"></section>
+      <section class="panel"><h2>原图局部放大 · 查看质感</h2><div class="detail"><img id="detail" alt="对应位置的局部放大"></div></section>
+    </div>
+    <div class="meta"><h2 id="title"></h2><div class="links"><a id="fullLink" target="_blank" rel="noopener">打开完整图</a><a id="detailLink" target="_blank" rel="noopener">打开局部图</a></div></div>
+    <div class="review-box">
+      <div class="review-head"><strong id="reviewLabel">当前版本审核</strong><div class="choice"><label for="preferred">这项偏好</label><select id="preferred" aria-label="选择此项偏好版本"><option value="">暂不确定</option><option value="A">A 当前版</option><option value="B">B 新形式</option><option value="C">C 新形式</option></select></div></div>
+      <div class="review"><select id="status" aria-label="当前版本审核结果"><option value="pending">待确认</option><option value="ok">可以</option><option value="revise">需要修改</option></select><textarea id="note" placeholder="写下当前版本的修改备注……" aria-label="当前版本修改备注"></textarea></div>
+    </div>
+    <div class="general"><p>整体修改备注</p><textarea id="general" placeholder="写下整组特效的修改意见……"></textarea></div>
+    <p class="foot">备注保存在当前浏览器。需要发回审核结果时，请导出 JSON 备份。</p>
+    <button class="export" id="export">导出审核备注</button>
+  </main>
+  <script>
+    const items=[
+      {id:'01',name:'选中香料',versions:{A:'叶面柔光浮现',B:'叶后月牙光环',C:'叶尖星点连线'}},
+      {id:'02',name:'香料落秤',versions:{A:'盘沿珍珠白点散开',B:'落点白金涟漪',C:'光珠沿盘游走'}},
+      {id:'03',name:'称量完成',versions:{A:'秤杆香槟金光扫过',B:'秤杆金珠逐点亮',C:'秤心花形金印'}},
+      {id:'05',name:'蒸制进行中',versions:{A:'锅口珍珠白汽缓升',B:'层叠自然白汽',C:'轻纱云纹卷升'}},
+      {id:'06',name:'蒸制结束',versions:{A:'白汽向两侧迅速散尽',B:'白汽碎成雾珠',C:'薄雾从中分散'}},
+      {id:'07',name:'封口完成',versions:{A:'绳结白金珠光一闪',B:'珍珠光环晕开',C:'香槟花形光印'}},
+      {id:'08',name:'补货完成',versions:{A:'药篮绿叶轻扬',B:'艾叶沿弧线扬起',C:'嫩枝从药篮探出'}},
+      {id:'09',name:'废料入桶',versions:{A:'灰粉沉入桶口',B:'灰粉细流落入',C:'桶内灰纹轻漾'}}
+    ];
+    const key='huajian-vfx-abc-forms-20261015';
+    let saved={general:'',items:{}};try{const old=JSON.parse(localStorage.getItem(key)||'{}');if(old&&typeof old==='object')saved={general:old.general||'',items:old.items||{},revision:old.revision||''}}catch{}
+    if(saved.revision!=='r2'){
+      const old=localStorage.getItem(key);if(old)localStorage.setItem(key+'-修订前备份',old);
+      if(saved.items['01']){delete saved.items['01'].variants?.A;if(saved.items['01'].preferred==='A')saved.items['01'].preferred=''}
+      delete saved.items['04'];
+      saved.revision='r2';localStorage.setItem(key,JSON.stringify(saved));
+    }
+    let current=0,variant='A';const $=id=>document.getElementById(id),pick=$('pick'),versions=$('versions'),status=$('status'),note=$('note'),preferred=$('preferred'),general=$('general');
+    function record(id,v){return saved.items[id]?.variants?.[v]||{status:(v==='A'&&id==='09')?'ok':'pending',note:''}}
+    function ensure(id){saved.items[id]??={preferred:'',variants:{}};saved.items[id].variants??={};return saved.items[id]}
+    function persist(){const item=items[current],target=ensure(item.id);target.variants[variant]={status:status.value,note:note.value};target.preferred=preferred.value;saved.general=general.value;localStorage.setItem(key,JSON.stringify(saved))}
+    function file(item,v,folder){return `${folder}/${item.id}-${item.name}-${v}.webp?v=20261015-final`}
+    function render(){const item=items[current],full=file(item,variant,'完整图'),detail=file(item,variant,'局部放大');
+      $('full').src=full;$('detail').src=detail;$('full').alt=`${item.name} ${variant} 版完整原图特效预览`;$('detail').alt=`${item.name} ${variant} 版局部放大`;
+      $('title').textContent=`${item.id} · ${item.name}｜${variant} ${item.versions[variant]}`;$('compareTitle').textContent=`${item.id} · ${item.name}`;$('reviewLabel').textContent=`${variant} 版审核备注`;
+      $('fullLink').href=full;$('detailLink').href=detail;const r=record(item.id,variant);status.value=r.status;note.value=r.note;preferred.value=saved.items[item.id]?.preferred||'';
+      [...pick.children].forEach((b,i)=>b.classList.toggle('on',i===current));
+      versions.replaceChildren();for(const v of ['A','B','C']){const b=document.createElement('button');b.type='button';b.className='version-card'+(v===variant?' on':'');b.setAttribute('aria-pressed',String(v===variant));
+        const img=document.createElement('img');img.src=file(item,v,'局部放大');img.alt=`${item.name} ${v} 版局部预览`;
+        const label=document.createElement('span');label.className='label';const first=document.createElement('span');const revised=item.id==='01'&&v==='A';first.textContent=`${v} · ${revised?'本轮重做':v==='A'?'当前版':'新形式'}`;const mark=document.createElement('em');mark.textContent=saved.items[item.id]?.preferred===v?'已选偏好':'';label.append(first,mark);
+        const desc=document.createElement('small');desc.textContent=item.versions[v];b.append(img,label,desc);b.onclick=()=>{persist();variant=v;render()};versions.append(b)}
+    }
+    items.forEach((item,i)=>{const b=document.createElement('button');b.textContent=item.id+' '+item.name;b.onclick=()=>{persist();current=i;variant='A';render()};pick.append(b)});
+    status.onchange=persist;note.oninput=persist;preferred.onchange=()=>{persist();render()};general.value=saved.general;general.oninput=persist;render();
+    $('export').onclick=()=>{persist();const data={baseImage:'已确定界面-原图.png',general:saved.general,items:items.map(item=>({id:item.id,name:item.name,preferred:saved.items[item.id]?.preferred||'',versions:Object.fromEntries(['A','B','C'].map(v=>[v,{description:item.versions[v],...record(item.id,v)}]))}))};const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='花间香铺-确认版界面特效ABC审核备注.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+  </script>
+</body>
+</html>
